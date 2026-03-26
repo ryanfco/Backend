@@ -93,6 +93,50 @@ app.post('/api/clientes', (req, res) => {
             console.error('Erro ao efetuar login:', err);
             return res.status(500).json({ error: 'Erro ao efetuar login.' });
         }
-        res.status(201).json({ Message: 'Usuario criado com sucesso' });
+        res.status(200).json({ Message: 'Usuario criado com sucesso' });
+    }); 
+});
+
+
+
+
+app.put('/api/clientes/:id', (req, res) => {
+    const { id } = req.params;
+    const {nome , cnpj , email , telefone} = req.body;
+    const hash = bcrypt.hashSync("techsolution", 10);
+
+    if (!nome || !cnpj || !email || !telefone ) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+
+    const query = `update cliente set nome = '${nome}' , cnpj = '${cnpj}' , email = '${email}', telefone = '${telefone}' where id_cliente = '${id}'`;
+    connection.query(query, [ nome , cnpj , email , telefone], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao atualizar o Usuario.' });
+        }
+        res.status(200).json({ Message: 'Usuario atualizado com sucesso' });
+    }); 
+});
+
+
+app.delete('/api/clientes/:id', (req, res) => {
+    const { id } = req.params;
+    
+
+
+    if ( !id ) {
+        return res.status(400).json({ error: 'O campo e obrigatório.' });
+    }
+
+
+    const query = `delete from cliente where id_cliente = '${id}'`;
+    connection.query(query, [id], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao deletar o Usuario.' });
+        }
+        res.status(200).json({ Message: 'Usuario deletado com sucesso' });
     }); 
 });

@@ -2,7 +2,7 @@
   "name": "my-mysql-project",
   "version": "1.0.0",
   "description": "A project using mysql2 package",
-  "main": "index.html",
+  "main": "server.js",
   "scripts": {
     "start-server": "nodemon server.js"
   },
