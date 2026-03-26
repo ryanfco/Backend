@@ -155,7 +155,7 @@ app.get('/api/softwares', (req, res) => {
 
 app.post('/api/softwares', (req, res) => {
     const { nome, versao, tipo_licenca, fabricante} = req.body;
-
+    console.log('666');
     if (!nome || !versao || !tipo_licenca || !fabricante ) {
         return res.status(400).json({ error: 'bota dados ai.' });
     }
