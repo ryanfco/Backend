@@ -1,0 +1,18 @@
+{
+  "name": "my-mysql-project",
+  "version": "1.0.0",
+  "description": "A project using mysql2 package",
+  "main": "index.html",
+  "scripts": {
+    "start-server": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mysql2": "^3.15.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Programação Web 2.0</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-header">
+            <h1>Quiz de Programação Web</h1>
+            <div class="quiz-info">
+                <div id="temporizador">Tempo: <span>30</span>s</div>
+                <div id="pontuacao">Pontuação: <span>0</span></div>
+            </div>
+        </div>
+
+        <div class="quiz-body">
+            <div id="tela-inicial" class="screen active">
+                <h2>Bem-vindo ao Quiz!</h2>
+                <p>Teste seus conhecimentos em programação web</p>
+                <button id="botao-iniciar" class="btn">Iniciar Quiz</button>
+            </div>
+
+            <div id="tela-pergunta" class="screen">
+                <div id="container-pergunta">
+                    <h2 id="pergunta"></h2>
+                    <div id="container-respostas"></div>
+                </div>
+            </div>
+
+            <div id="tela-resultado" class="screen">
+                <h2>Resultado Final</h2>
+                <p>Sua pontuação final: <span id="pontuacao-final">0</span></p>
+                <button id="botao-reiniciar" class="btn">Jogar Novamente</button>
+            </div>
+        </div>
+    </div>
+    <script src="quiz.js"></script>
+</body>
+</html>
