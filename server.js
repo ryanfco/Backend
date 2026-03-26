@@ -140,3 +140,34 @@ app.delete('/api/clientes/:id', (req, res) => {
         res.status(200).json({ Message: 'Usuario deletado com sucesso' });
     }); 
 });
+
+app.get('/api/softwares', (req, res) => {
+    const query = 'select * from software';
+    connection.query(query, [], (err, results) => {
+        if (err) {
+            console.error('Erro ao consultar software:', err);
+            return res.status(500).json({ error: 'Erro ao consultar software.' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+
+app.post('/api/softwares', (req, res) => {
+    const { nome, versao, tipo_licenca, fabricante} = req.body;
+
+    if (!nome || !versao || !tipo_licenca || !fabricante ) {
+        return res.status(400).json({ error: 'bota dados ai.' });
+    }
+
+
+     const query = 'INSERT INTO software (nome, versao, tipo_licenca, fabricante) VALUES (?,?,?,?)';
+    connection.query(query, [ nome, versao, tipo_licenca, fabricante], (err, results) => {        
+        if (err) {
+            console.error('Erro ao criar software:', err);
+            return res.status(500).json({ error: 'Erro ao criar software' });
+        }
+        res.status(201).json({ Message: 'Software adicionado com sucesso' });
+    }); 
+});
+
