@@ -401,3 +401,36 @@ app.delete('/api/instalacoes/:id', (req, res) => {
         res.status(200).json({ Message: 'Instalação deletada com sucesso!' });
     }); 
 });
+app.get('/api/chamados/:id/historico', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    
+    if (id == null) {
+        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
+    }
+    const query = `select * from historico_chamado where id_historico = '${id}'`;
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao salvar pontuação:', err);
+            return res.status(500).json({ error: 'Erro ao salvar pontuação.' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+app.post('/api/chamados/:id/historico', (req, res) => {
+    const { id_chamado, id_usuario, descricao, data_evento } = req.body;
+
+    if (!id_chamado || !id_usuario || !descricao || !data_evento ) {
+        return res.status(400).json({ error: 'Todos os campos devem ser informados.' });
+    }
+
+    const query = 'INSERT INTO historico_chamado (id_chamado, id_usuario, descricao, data_evento) VALUES (?, ?, ?, ?)';
+    connection.query(query, [id_chamado, id_usuario, descricao, data_evento], (err, results) => {
+        if (err) {
+            console.error('Erro ao criar historico:', err);
+            return res.status(500).json({ error: 'Erro ao criar historico.' });
+        }
+        res.status(201).json({ message: 'Historico criado com sucesso' });
+    }); 
+});
