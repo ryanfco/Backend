@@ -257,3 +257,147 @@ app.delete('/api/ativos/:id', (req, res) => {
         res.status(200).json({ Message: 'Usuario deletado com sucesso' });
     }); 
 });
+
+app.get('/api/softwares/:id', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    
+    if (id == null) {
+        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
+    }
+    const query = `select * from software where id_software = '${id}'`;
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao pesquisar software:', err);
+            return res.status(500).json({ error: 'Erro ao pesquisar software:' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+app.put('/api/softwares/:id', (req, res) => {
+    const { id } = req.params;
+    const {nome, versao, tipo_licenca, fabricante} = req.body;
+ 
+
+    if (!nome || !versao || !tipo_licenca || !fabricante) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+
+    const query = `update software set nome = '${nome}' , versao = '${versao}' , tipo_licenca = '${tipo_licenca}', fabricante = '${fabricante}' where id_software = '${id}'`;
+    connection.query(query, [ nome, versao, tipo_licenca, fabricante], (err, results) => {        
+        if (err) {
+            console.error('Erro ao atualizar software', err);
+            return res.status(500).json({ error: 'Erro ao atualizar software' });
+        }
+        res.status(200).json({ Message: 'Software atualizado com sucesso' });
+    }); 
+});
+
+app.delete('/api/softwares/:id', (req, res) => {
+    const { id } = req.params;
+    
+
+
+    if ( !id ) {
+        return res.status(400).json({ error: 'O campo ID é obrigatório.' });
+    }
+
+
+    const query = `delete from software where id_software = '${id}'`;
+    connection.query(query, [id], (err, results) => {        
+        if (err) {
+            console.error('Erro ao deletar software', err);
+            return res.status(500).json({ error: 'Erro ao deletar software' });
+        }
+        res.status(200).json({ Message: 'Software deletado com sucesso!' });
+    }); 
+});
+
+app.get('/api/instalacoes', (req, res) => {
+    const query = 'select * from instalacao_software';
+    connection.query(query, [], (err, results) => {
+        if (err) {
+            console.error('Erro ao consultar instalação:', err);
+            return res.status(500).json({ error: 'Erro ao consultar instalação.' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+app.post('/api/instalacoes', (req, res) => {
+    const { id_instalacao, id_ativo, id_software, chave_licenca, data_instalacao, data_expiracao} = req.body;
+    console.log('666');
+    if ( !id_ativo || !id_software || !chave_licenca || !data_instalacao || !data_expiracao ) {
+        return res.status(400).json({ error: 'Precisa dos dados.' });
+    }
+
+    console.log(data_expiracao);
+
+     const query = 'INSERT INTO instalacao_software (id_ativo, id_software, chave_licenca, data_instalacao, data_expiracao) VALUES (?,?,?,?,?)';
+    connection.query(query, [ id_ativo, id_software, chave_licenca, data_instalacao, data_expiracao], (err, results) => {        
+        if (err) {
+            console.error('Erro ao fazer instalação:', err);
+            return res.status(500).json({ error: 'Erro ao fazer instalação' });
+        }
+        res.status(201).json({ Message: 'Software instalado com sucesso' });
+    }); 
+});
+
+app.get('/api/instalacoes/:id', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    
+    if (id == null) {
+        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
+    }
+    const query = `select * from instalacao_software where id_instalacao = '${id}'`;
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao pesquisar instalacao:', err);
+            return res.status(500).json({ error: 'Erro ao pesquisar instalacao:' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+app.put('/api/instalacoes/:id', (req, res) => {
+    const { id } = req.params;
+    const { id_instalacao, id_ativo, id_software, chave_licenca, data_instalacao, data_expiracao} = req.body;
+ 
+
+    if ( !id_ativo || !id_software || !chave_licenca || !data_instalacao || !data_expiracao) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+
+    const query = `update instalacao_software set id_ativo = '${id_ativo}' , id_software = '${id_software}' , chave_licenca = '${chave_licenca}', data_instalacao = '${data_instalacao}', data_expiracao = '${data_expiracao}'where id_software = '${id}'`;
+    connection.query(query, [ id_instalacao, id_ativo, id_software, chave_licenca, data_instalacao, data_expiracao], (err, results) => {        
+        if (err) {
+            console.error('Erro ao atualizar instalação!', err);
+            return res.status(500).json({ error: 'Erro ao atualizar instalação!' });
+        }
+        res.status(200).json({ Message: 'instalação atualizado com sucesso!' });
+    }); 
+});
+
+app.delete('/api/instalacoes/:id', (req, res) => {
+    const { id } = req.params;
+    
+
+
+    if ( !id ) {
+        return res.status(400).json({ error: 'O campo ID é obrigatório.' });
+    }
+
+
+    const query = `delete from instalacao_software where id_instalacao = '${id}'`;
+    connection.query(query, [id], (err, results) => {        
+        if (err) {
+            console.error('Erro ao deletar Instalação', err);
+            return res.status(500).json({ error: 'Erro ao deletar Instalação' });
+        }
+        res.status(200).json({ Message: 'Instalação deletada com sucesso!' });
+    }); 
+});
