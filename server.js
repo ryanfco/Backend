@@ -171,3 +171,89 @@ app.post('/api/softwares', (req, res) => {
     }); 
 });
 
+app.post('/api/ativos', (req, res) => {
+    const { nome, tipo, id_cliente, descricao } = req.body;
+    const hash = bcrypt.hashSync("techsolution", 10);
+
+    if (!nome || !tipo || !id_cliente || !descricao ) {
+        return res.status(400).json({ error: 'Todos os campos devem ser informados.' });
+    }
+
+    const query = 'INSERT INTO ativo (nome, tipo, id_cliente, descricao) VALUES (?, ?, ?, ?)';
+    connection.query(query, [nome, tipo, id_cliente, descricao], (err, results) => {
+        if (err) {
+            console.error('Erro ao criar ativo:', err);
+            return res.status(500).json({ error: 'Erro ao criar ativo.' });
+        }
+        res.status(201).json({ message: 'Ativo criado com sucesso' });
+    }); 
+});
+
+app.get('/api/ativos', (req, res) => {
+    const query = 'select * from ativo';
+    connection.query(query, [], (err, results) => {
+        if (err) {
+            console.error('Erro ao consultar ativos:', err);
+            return res.status(500).json({ error: 'Erro ao consultar ativos.' });
+        }
+        res.status(200).json({ ativos: results });
+    }); 
+});
+
+app.get('/api/ativos/:id', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    
+    if (id == null) {
+        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
+    }
+    const query = `select * from ativo where id_ativo = '${id}'`;
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao salvar pontuação:', err);
+            return res.status(500).json({ error: 'Erro ao salvar pontuação.' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+});app.put('/api/ativos/:id', (req, res) => {
+    const { id } = req.params;
+    const {nome , cnpj , email , telefone} = req.body;
+    const hash = bcrypt.hashSync("techsolution", 10);
+
+    if (!nome || !cnpj || !email || !telefone ) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+
+    const query = `update ativo set nome = '${nome}' , tipo = '${tipo}' , id_cliente = '${id_cliente}' , descricao = '${descricao}' where id_ativo = '${id}'`;
+    connection.query(query, [ nome , cnpj , email , telefone], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao atualizar o Usuario.' });
+        }
+        res.status(200).json({ Message: 'Usuario atualizado com sucesso' });
+    }); 
+});
+app.delete('/api/ativos/:id', (req, res) => {
+    const { id } = req.params;
+    
+
+
+    if ( !id ) {
+        return res.status(400).json({ error: 'O campo e obrigatório.' });
+    }
+
+
+    const query = `delete from ativo where id_ativo = '${id}'`;
+    connection.query(query, [id], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao deletar o Usuario.' });
+        }
+        res.status(200).json({ Message: 'Usuario deletado com sucesso' });
+    }); 
+});
