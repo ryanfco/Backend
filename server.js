@@ -434,3 +434,185 @@ app.post('/api/chamados/:id/historico', (req, res) => {
         res.status(201).json({ message: 'Historico criado com sucesso' });
     }); 
 });
+
+app.get('/api/usuarios', (req, res) => {
+    const query = 'select * from usuario';
+    connection.query(query, [], (err, results) => {
+        if (err) {
+            console.error('Erro ao consultar clientes:', err);
+            return res.status(500).json({ error: 'Erro ao consultar clientes.' });
+        }
+        res.status(200).json({ usuario: results });
+    }); 
+});
+
+app.post('/api/usuarios', (req, res) => {
+    const { nome , email , senha , perfil} = req.body;
+
+    if (!nome || !email || !senha || !perfil ) {
+        return res.status(400).json({ error: 'bota dados ai.' });
+    }
+
+    console.log(nome , email , senha , perfil)
+
+     const query = 'INSERT INTO usuario (nome , email, senha , perfil) VALUES (?,?,?,?)';
+    connection.query(query, [ nome , email , senha , perfil], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao efetuar login.' });
+        }
+        res.status(200).json({ Message: 'Usuario criado com sucesso' });
+    }); 
+});
+
+
+app.get('/api/usuarios/:id', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    
+    if (id == null) {
+        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
+    }
+    const query = `select * from usuario where id_usuario = '${id}'`;
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao salvar pontuação:', err);
+            return res.status(500).json({ error: 'Erro ao salvar pontuação.' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+
+app.put('/api/usuarios/:id', (req, res) => {
+    const { id } = req.params;
+    const {nome , email , senha , perfil} = req.body;
+
+
+    if (!nome || !email || !senha || !perfil ) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+
+    const query = `update usuario set nome = '${nome}' , email = '${email}' , senha = '${senha}', perfil = '${perfil}' where id_usuario = '${id}'`;
+    connection.query(query, [ nome , email , senha , perfil], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao atualizar o Usuario.' });
+        }
+        res.status(200).json({ Message: 'Usuario atualizado com sucesso' });
+    }); 
+});
+
+app.delete('/api/usuarios/:id', (req, res) => {
+    const { id } = req.params;
+    
+
+
+    if ( !id ) {
+        return res.status(400).json({ error: 'O campo e obrigatório.' });
+    }
+
+
+    const query = `delete from usuario where id_usuario = '${id}'`;
+    connection.query(query, [id], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao deletar o Usuario.' });
+        }
+        res.status(200).json({ Message: 'Usuario deletado com sucesso' });
+    }); 
+});
+
+
+
+// chamado
+
+app.get('/api/chamados', (req, res) => {
+    const query = 'select * from chamado';
+    connection.query(query, [], (err, results) => {
+        if (err) {
+            console.error('Erro ao consultar chamados:', err);
+            return res.status(500).json({ error: 'Erro ao consultar chamados.' });
+        }
+        res.status(200).json({ chamados: results });
+    }); 
+});
+
+app.post('/api/chamados', (req, res) => {
+    const { id_ativo, id_usuario, codigo, titulo, descricao, status_chamado, data_abertura, data_fechamento} = req.body;
+
+    if (!id_ativo || !id_usuario || !codigo || !titulo ||!descricao || !status_chamado || !data_abertura || !data_fechamento ) {
+        return res.status(400).json({ error: 'bota dados ai.' });
+    }
+
+    console.log(id_ativo, id_usuario, codigo, titulo, descricao, status_chamado, data_abertura, data_fechamento)
+
+   
+
+     const query = 'INSERT INTO chamado (id_ativo, id_usuario, codigo, titulo, descricao, status_chamado, data_abertura, data_fechamento) VALUES (?,?,?,?,?,?,?,?)';
+    connection.query(query, [ id_ativo, id_usuario, codigo, titulo, descricao, status_chamado, data_abertura, data_fechamento], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao efetuar login.' });
+        }
+        res.status(200).json({ Message: 'Criado com sucesso' });
+    }); 
+});
+
+app.get('/api/chamados/:id', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    
+    if (id == null) {
+        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
+    }
+    const query = `select * from chamado where id_chamado = '${id}'`;
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao salvar pontuação:', err);
+            return res.status(500).json({ error: 'Erro ao salvar pontuação.' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+app.put('/api/chamados/:id', (req, res) => {
+    const { id } = req.params;
+    const {id_ativo, id_usuario, codigo, titulo, descricao, status_chamado, data_abertura, data_fechamento} = req.body;
+
+
+    if (!id_ativo || !id_usuario || !codigo || !titulo ||!descricao || !status_chamado || !data_abertura || !data_fechamento ) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+
+    const query = `update chamado set id_ativo = '${id_ativo}' , id_usuario = '${id_usuario}' , codigo = '${codigo}', titulo = '${titulo}', descricao = '${descricao}', status_chamado = '${status_chamado}', data_abertura = '${data_abertura}', data_fechamento = '${data_fechamento}' where id_chamado = '${id}'`;
+    connection.query(query, [ id_ativo, id_usuario, codigo, titulo, descricao, status_chamado, data_abertura, data_fechamento], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao atualizar o chamado.' });
+        }
+        res.status(200).json({ Message: 'Atualizado com sucesso' });
+    }); 
+});
+
+app.delete('/api/chamados/:id', (req, res) => {
+    const { id } = req.params;
+    
+
+
+    if ( !id ) {
+        return res.status(400).json({ error: 'O campo e obrigatório.' });
+    }
+
+
+    const query = `delete from chamado where id_chamado = '${id}'`;
+    connection.query(query, [id], (err, results) => {        
+        if (err) {
+            console.error('Erro ao efetuar login:', err);
+            return res.status(500).json({ error: 'Erro ao deletar o chamado.' });
+        }
+        res.status(200).json({ Message: 'chamado deletado com sucesso' });
+    }); 
+});
