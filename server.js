@@ -616,3 +616,58 @@ app.delete('/api/chamados/:id', (req, res) => {
         res.status(200).json({ Message: 'chamado deletado com sucesso' });
     }); 
 });
+
+
+app.get('/api/chamados/:id/anexos', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    
+    if (id == null) {
+        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
+    }
+    const query = `select * from anexos where id_anexo = '${id}'`;
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao pesquisar anexos:', err);
+            return res.status(500).json({ error: 'Erro ao pesquisar anexos:' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
+
+app.post('/api/chamados/:id/anexos', (req, res) => {
+    const { nome_arquivo, caminho, data_upload } = req.body;
+    console.log('666');
+    if ( !nome_arquivo || !caminho || !data_upload  ) {
+        return res.status(400).json({ error: 'Precisa dos dados.' });
+    }
+
+
+     const query = 'INSERT INTO anexo ( nome_arquivo, caminho, data_upload ) VALUES (?,?,?)';
+    connection.query(query, [ nome_arquivo, caminho, data_upload  ], (err, results) => {        
+        if (err) {
+            console.error('Erro ao fazer anexos:', err);
+            return res.status(500).json({ error: 'Erro ao fazer anexos' });
+        }
+        res.status(201).json({ Message: ' Anexado com sucesso' });
+    }); 
+});
+
+app.get('/api/dashboard/ativos/:id', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    
+    if (id == null) {
+        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
+    }
+    const query = `select * from anexos where id_anexo = '${id}'`;
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao pesquisar anexos:', err);
+            return res.status(500).json({ error: 'Erro ao pesquisar anexos:' });
+        }
+        res.status(200).json({ results });
+    }); 
+});
+
