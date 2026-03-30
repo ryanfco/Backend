@@ -654,18 +654,28 @@ app.post('/api/chamados/:id/anexos', (req, res) => {
     }); 
 });
 
-app.get('/api/dashboard/ativos/:id', (req, res) => {
-    const { id } = req.params;
-    console.log(id);
+app.get('/api/dashboard/ativos', (req, res) => {
+    const query = `select
+    a.nome AS ativo,
+    a.tipo AS tipo,
+    c.nome AS cliente,
+    (SELECT COUNT(*) 
+     FROM instalacao_software isoft 
+     WHERE isoft.id_ativo = a.id_ativo) AS quantidade_softwares,
+    (SELECT COUNT(*) 
+     FROM chamado ch 
+     WHERE ch.id_ativo = a.id_ativo) AS quantidade_chamados
+FROM 
+    ativo a
+INNER JOIN 
+    cliente c ON a.id_cliente = c.id_cliente
+ORDER BY 
+    a.nome ASC `;
     
-    if (id == null) {
-        return res.status(400).json({ error: 'Para realizar a consulta é necessário o id.' });
-    }
-    const query = `select * from anexos where id_anexo = '${id}'`;
-    connection.query(query, [id], (err, results) => {
+    connection.query(query, (err, results) => {
         if (err) {
-            console.error('Erro ao pesquisar anexos:', err);
-            return res.status(500).json({ error: 'Erro ao pesquisar anexos:' });
+            console.error('Erro ao executar query do dashboard :', err);
+            return res.status(500).json({ error: 'Erro ao buscar dados:' });
         }
         res.status(200).json({ results });
     }); 
